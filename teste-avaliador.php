@@ -22,4 +22,10 @@ $leiloeiro->avalia($leilao);
 
 $maiorValor = $leiloeiro->getMaiorValor();
 
-echo $maiorValor;
+$valorEsperado = 2500;
+
+if($valorEsperado == $maiorValor){
+    echo "TESTE OK";
+}else{
+    echo "TESTE FALHOU";
+}
