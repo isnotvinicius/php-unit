@@ -86,7 +86,7 @@ composer require --dev phpunit/phpunit ^9
 
 - A primeira coisa a se saber do PHPUnit é que ele não irá executar arquivos como o que criamos anteriormente, o PHPUnit trabalha com classes de teste, ou seja, para que os testes sejam executados eles precisam estar dentro de uma classe.
 
-- O próximo passo é criarmos uma pasta para armezenarmos as nossas classes de teste. Neste exemplo elas ficarão dentro da pasta ```tests``` na raiz do nosso projeto.
+- O próximo passo é criarmos uma pasta para armazenarmos as nossas classes de teste. Neste exemplo elas ficarão dentro da pasta ```tests``` na raiz do nosso projeto.
 
 - Dentro desta pasta iremos criar uma classe chamada ```AvaliadorTest.php```. Note que iniciamos com o nome da classe que será testada e adicionamos o sufixo ```test```, isso é uma convenção, ou seja, não é uma regra a ser seguida mas é assim que normalmente são nomeadas as classes de teste do PHPUnit.
 
@@ -205,3 +205,4 @@ public function avalia(Leilao $leilao): void
 - Se você inicializar a váriavel ```$menorValor``` com INF, copiar o código que encontra um maior lance em ordem crescente alterando para que seja o menor valor irá notar que o teste falha, mas por quê? O erro está na lógica utilizada para verificar o valor dos lances, com o else que implementamos ele nunca irá verificar os dois casos mas sim apenas o primeiro. Para resolver isso basta retirar o else e manter dois if's dentro dó método.
 
 - Claro que este não é o código mais limpo do mundo, este é apenas um exemplo para que você possa notar a importância dos testes automatizados e como eles nos ajudam a verificar os bugs que nosso código possuí, sem eles talvez demorariamos muito mais tempo para encontrar um erro e refatorar nosso código, mas como o teste nos mostra o que falhou e onde falhou podemos corrigir rapidamente as falhas.
+
