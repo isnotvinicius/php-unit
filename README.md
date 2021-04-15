@@ -129,7 +129,7 @@ public function testUm()
 }
 ```
 
-- Note que removemos o if criado anteriormente, mas por quê? Essa verificação de teste sucedido ou falho é o PHPUnit que faz para nós. Como herdamos a classe TestCase nós temos acesso a alguns métodos, um deles é o ```$this->assertEquals();``` que verifica se dois valores são iguais (Para verificar todos os métodos do PHPUnit basta acessar <a>https://phpunit.readthedocs.io/en/9.5/assertions.html</a>). Então no lugar do nosso if nós teremos:
+- Note que removemos o if criado anteriormente, mas por quê? Essa verificação de teste sucedido ou falho é o PHPUnit que faz para nós. Como herdamos a classe TestCase nós temos acesso a alguns métodos, um deles é o ```$this->assertEquals();``` que verifica se dois valores são iguais (Para verificar todos os métodos do PHPUnit basta acessar a [documentação](https://phpunit.readthedocs.io/en/9.5/assertions.html)). Então no lugar do nosso if nós teremos:
 
 ```
 $this->assertEquals(2500, $maiorValor);
@@ -206,3 +206,27 @@ public function avalia(Leilao $leilao): void
 
 - Claro que este não é o código mais limpo do mundo, este é apenas um exemplo para que você possa notar a importância dos testes automatizados e como eles nos ajudam a verificar os bugs que nosso código possuí, sem eles talvez demorariamos muito mais tempo para encontrar um erro e refatorar nosso código, mas como o teste nos mostra o que falhou e onde falhou podemos corrigir rapidamente as falhas.
 
+
+## Parte 3: Classes de equivalência
+
+- Agora que aprendemos como podemos criar testes automatizados com o PHPUnit, surge uma dúvida muito importante: Como saber quando nossa aplicação é confiável e quando temos testes o suficiente? Se analisarmos bem nosso código, baseado nos padrões passados anteriormente e olharmos o que vem antes do ```assert/then```, notaremos que temos algumas diferenças na montagem do cenário de testes mas que não há diferença nos dados que passamos, ou seja, tanto faz se passarmos 20.000 ou 2.000, o resultado será o mesmo. Mas se fossemos criar um teste para cada valor diferente teriamos testes infinitos, e é aí que entram as classes de equivalência.
+
+### <b>Entendendo o que são classes de equivalência e limites de fronteira</b>
+
+- Classes de equivalência são similaridades entre os cenários de testes. É muito importante encontrar as classes de equivalência pois com elas poderemos criar apenas um teste para cada cenário, não iremos repetir testes à toa. Um exemplo simples para entendermos melhor seria um cenário onde iriamos testar idades, vamos dividi-lo em três partes:
+
+   1º - Temos o dado de entrada, que é justamente a idade;
+
+   2º - Temos os valores permitidos, vamos tomar como exemplo uma idade entre 18 e 120;
+
+   3º - Temos as classes de equivalência. Um teste para idades entre 18 e 120 deve funcionar da mesma forma, não precisamos criar um teste para cada idade de 18 a 120. Podemos ter um teste para idades inferiores a 18 e um teste para idades superiores a 120. São 3 testes para cada classe de equivalência e que funciona com qualquer valor dentro do limite estabelecido na regra de negócio, sem precisarmos criar um teste para cada valor.
+
+- Dentro das classes de equivalência podemos ter também uma abordagem diferente chama de ```Limite de fronteira```, que faz com que a gente teste o primeiro e último valor da classe de equivalência e/ou os valores <b>válidos</b> na borda da classe. Se pegarmos as três regras exemplificadas anteriormente e nos atentarmos aos limites de fronteira teremos os seguintes casos:
+
+   1º - De 18 à 120 iremos testar se a idade é igual à 18 e 120 que são o primeiro e último valor da classe e também iremos testar se a idade é igual a 19 ou 119 que são os valores mais próximos do limite da classe;
+
+   2º - Nas idades menores que 18 iremos testar se a idade é igual à 17 que é o valor mais próximo do limite da classe;
+
+   3º - Nas idades maiores que 120 iremos testar se a idade é igual à 121  que é o valor mais próximo do limite da classe.
+
+- Estas são formas de reduzirmos o número de testes da nossa aplicação sem perdermos a confiabilidade, garantindo que todos os casos estão sendo testados corretamente. Sempre teste apenas o necessário e evite criar o mesmo teste para um valor diferente. Caso queria estudar mais sobre classes de equivalência e limites de fronteira recomendo que leia este [artigo](http://testwarequality.blogspot.com/p/tenicas-de-teste.html). 
