@@ -86,7 +86,7 @@ composer require --dev phpunit/phpunit ^9
 
 - A primeira coisa a se saber do PHPUnit é que ele não irá executar arquivos como o que criamos anteriormente, o PHPUnit trabalha com classes de teste, ou seja, para que os testes sejam executados eles precisam estar dentro de uma classe.
 
-- O próximo passo é criarmos uma pasta para armezenarmos as nossas classes de teste. Neste exemplo elas ficarão dentro da pasta ```tests``` na raiz do nosso projeto.
+- O próximo passo é criarmos uma pasta para armazenarmos as nossas classes de teste. Neste exemplo elas ficarão dentro da pasta ```tests``` na raiz do nosso projeto.
 
 - Dentro desta pasta iremos criar uma classe chamada ```AvaliadorTest.php```. Note que iniciamos com o nome da classe que será testada e adicionamos o sufixo ```test```, isso é uma convenção, ou seja, não é uma regra a ser seguida mas é assim que normalmente são nomeadas as classes de teste do PHPUnit.
 
