@@ -129,7 +129,7 @@ public function testUm()
 }
 ```
 
-- Note que removemos o if criado anteriormente, mas por quê? Essa verificação de teste sucedido ou falho é o PHPUnit que faz para nós. Como herdamos a classe TestCase nós temos acesso a alguns métodos, um deles é o ```$this->assertEquals();``` que verifica se dois valores são iguais. Então no lugar do nosso if nós teremos:
+- Note que removemos o if criado anteriormente, mas por quê? Essa verificação de teste sucedido ou falho é o PHPUnit que faz para nós. Como herdamos a classe TestCase nós temos acesso a alguns métodos, um deles é o ```$this->assertEquals();``` que verifica se dois valores são iguais (Para verificar todos os métodos do PHPUnit basta acessar <a>https://phpunit.readthedocs.io/en/9.5/assertions.html</a>). Então no lugar do nosso if nós teremos:
 
 ```
 $this->assertEquals(2500, $maiorValor);
@@ -180,3 +180,28 @@ class Avaliador
 ```
 
 - Agora se executarmos os testes com os dois métodos criados ambos passarão, já que agora o maior valor sempre será de fato o maior lance.
+
+## Escrevendo mais testes
+
+- Se nós adicionarmos mais uma funcionalidade ao nosso código, como poderíamos escrever um teste para essa funcionalidade?
+
+- O primeiro passo é adicionar mais uma funcionalidade. Na nossa classe ```Avaliador.php``` nós iremos adicionar um else if para verificar os menores lances do leilão e podermos recuperá-los depois com um método get (não esqueça de implementá-lo). Sua função ```avalia()``` deverá ficar assim:
+
+```
+public function avalia(Leilao $leilao): void
+{
+    foreach($leilao->getLances() as $lance){
+        if($lance->getValor() > $this->maiorValor){
+            $this->maiorValor = $lance->getValor();
+        } else if($lance->getValor() < $this->menorValor){
+            $this->menorValor = $lance->getValor();
+        }
+    }
+}
+```
+
+- Agora para o nosso teste é bem simples, a lógica é a mesma do teste que pega o maior valor em ordem decrescente, mudando apenas o valor passado para o método de verificação que deverá ficar ```$this->assertEquals(2000, $menorValor)```.
+
+- Se você inicializar a váriavel ```$menorValor``` com INF, copiar o código que encontra um maior lance em ordem crescente alterando para que seja o menor valor irá notar que o teste falha, mas por quê? O erro está na lógica utilizada para verificar o valor dos lances, com o else que implementamos ele nunca irá verificar os dois casos mas sim apenas o primeiro. Para resolver isso basta retirar o else e manter dois if's dentro dó método.
+
+- Claro que este não é o código mais limpo do mundo, este é apenas um exemplo para que você possa notar a importância dos testes automatizados e como eles nos ajudam a verificar os bugs que nosso código possuí, sem eles talvez demorariamos muito mais tempo para encontrar um erro e refatorar nosso código, mas como o teste nos mostra o que falhou e onde falhou podemos corrigir rapidamente as falhas.

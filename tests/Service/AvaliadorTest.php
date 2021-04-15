@@ -49,4 +49,44 @@ class AvaliadorTest extends TestCase
 
         $this->assertEquals(2500, $maiorValor);
     }
+
+    public function testAvaliadorDeveEncontrarOMenorLanceEmOrdemDecrescente()
+    {
+        $leilao = new Leilao('Carro brabo');
+
+        $vinicius = new Usuario('Vinicius');
+
+        $yasmin = new Usuario('Yasmin');
+        
+        $leilao->recebeLance(new Lance($yasmin, 2500));
+        $leilao->recebeLance(new Lance($vinicius, 2000));
+
+        $leiloeiro = new Avaliador();
+
+        $leiloeiro->avalia($leilao);
+
+        $menorValor = $leiloeiro->getMenorValor();
+
+        $this->assertEquals(2000, $menorValor);
+    }
+
+    public function testAvaliadorDeveEncontrarOMenorLanceEmOrdemCrescente()
+    {
+        $leilao = new Leilao('Carro brabo');
+
+        $vinicius = new Usuario('Vinicius');
+
+        $yasmin = new Usuario('Yasmin');
+
+        $leilao->recebeLance(new Lance($vinicius, 2000));
+        $leilao->recebeLance(new Lance($yasmin, 2500));
+
+        $leiloeiro = new Avaliador();
+
+        $leiloeiro->avalia($leilao);
+
+        $menorValor = $leiloeiro->getmenorValor();
+
+        $this->assertEquals(2000, $menorValor);
+    }
 }
