@@ -2,13 +2,13 @@
 
 - Este é um simples projeto para aprender os conceitos de TDD e a utilização do PHP Unit.
 
-## O que é e para que serve o TDD?
+## Parte 1: O que é e para que serve o TDD?
 
 - TDD, ou Desenvolvimento Orientado por Testes, é como o próprio nome já diz, desenvolver um software baseado em testes escritos do nosso código de produção. Basicamente o TDD se baseia em pequenos ciclos de repetições , onde para cada funcionalidade do sistema um teste é criado antes, é claro que inicialmente o teste falhará pois a funcionalidade ainda não existe, mas depois do teste implementamos a funcionalidade para que o teste passe. 
 
 - Mas quais as vantagens de se usar o TDD? Uma grande vantagem desse tipo de desenvolvimento é a segurança, tanto no refactoring como na correção de bugs, já que podemos ver o que estamos ou não afetando. Outra vantagem é que consequentemente o nosso código estará menos acoplado, levando em conta que temos que separá-lo em pequenos "pedaços" para que sejam testáveis, entre outras muitas vantagens. Existem diversos artigos pela internet que explicam de maneira mais detalhada do TDD e sua importância, vale a pena buscá-los.
 
-## Escrevendo um teste simples
+### <b>Escrevendo um teste simples</b>
 
 - Caso navegue pelas pastas do projeto, verá que ele se trata de um leilão, onde temos um Usuário com nome, um Leilão com a descrição e seus lances, e o Lance com o usuário que deu o lance e seu valor. Há também uma service que pega o array de Leilão e retorna para nós o maior valor.
 
@@ -44,7 +44,7 @@ echo $maiorValor;
 
 - Se executarmos este arquivo teremos como resultado de fato o maior lance dado, mas vamos pensar um pouco. Caso este código seja pego por outro desenvolvedor como ele terá certeza que este é de fato o maior lance? Outro problema é que o teste não informa se o código está correto ou não, ele apenas retornou o valor e nós mesmos precisamos verificar se o teste é correto ou falho. Como podemos resolver isso?
 
-## Testes automatizados
+### <b>Testes automatizados</b>
 
 - Um teste automatizado é extremamente necessário pois um teste feito manualmente está suscetível a erros, diferente de um automatizado. Testes automatizados são separados em alguns cenários, sendo eles:
 
@@ -70,7 +70,7 @@ if($valorEsperado == $maiorValor){
 
 - Note que nosso teste criado ainda não está automatizado pois ele não informa se o teste foi bem sucedido ou não, para isso podemos adicionar um if verificando se o valor esperado é igual a 2500, mas isso ainda é muito pouco e dá para ser melhorado. Como podemos melhorar e automatizar o nosso teste?
 
-## PHPUnit
+## Parte 2: Instalação e utilização do PHPUnit
 
 - O PHPUnit é um framework de testes orientado a códigos do PHP, é a ferramenta de testes mais famosa do PHP mas existem outras como o PEST, por exemplo.
 
@@ -82,7 +82,7 @@ composer require --dev phpunit/phpunit ^9
 
 - Agora que instalamos o PHPUnit, como iremos usá-lo para escrever um teste e utilizar todas as facilidades que ele nos traz?
 
-## Escrevendo testes com o PHPUnit
+### <b>Escrevendo testes com o PHPUnit</b>
 
 - A primeira coisa a se saber do PHPUnit é que ele não irá executar arquivos como o que criamos anteriormente, o PHPUnit trabalha com classes de teste, ou seja, para que os testes sejam executados eles precisam estar dentro de uma classe.
 
@@ -181,7 +181,7 @@ class Avaliador
 
 - Agora se executarmos os testes com os dois métodos criados ambos passarão, já que agora o maior valor sempre será de fato o maior lance.
 
-## Escrevendo mais testes
+### <b>Escrevendo mais testes</b>
 
 - Se nós adicionarmos mais uma funcionalidade ao nosso código, como poderíamos escrever um teste para essa funcionalidade?
 
