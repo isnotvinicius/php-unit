@@ -1,6 +1,6 @@
 # Testes unitários com PHP Unit
 
-- Este é um simples projeto para aprender os conceitos de TDD e a utilização do PHP Unit.
+- Este é um projeto simples para explicar o conceito do desenvolvimento baseado em testes, nele iremos abordar o que são e para quê servem os testes, como automatizar um teste e como utilizar o PHPUnit.
 
 ## Parte 1: O que é e para que serve o TDD?
 
