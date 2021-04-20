@@ -10,17 +10,11 @@ use Alura\Leilao\Service\Avaliador;
 
 class AvaliadorTest extends TestCase
 {
-    public function testAvaliadorDeveEncontrarOMaiorLanceEmOrdemCrescente()
+    /**
+     * @dataProvider entregaLeiloes
+     */
+    public function testAvaliadorDeveEncontrarOMaiorLance(Leilao $leilao)
     {
-        $leilao = new Leilao('Carro brabo');
-
-        $vinicius = new Usuario('Vinicius');
-
-        $yasmin = new Usuario('Yasmin');
-
-        $leilao->recebeLance(new Lance($vinicius, 2000));
-        $leilao->recebeLance(new Lance($yasmin, 2500));
-
         $leiloeiro = new Avaliador();
 
         $leiloeiro->avalia($leilao);
@@ -30,63 +24,70 @@ class AvaliadorTest extends TestCase
         $this->assertEquals(2500, $maiorValor);
     }
 
-    public function testAvaliadorDeveEncontrarOMaiorLanceEmOrdemDecrescente()
+    /**
+     * @dataProvider entregaLeiloes
+     */
+    public function testAvaliadorDeveEncontrarOMenorLance(Leilao $leilao)
     {
-        $leilao = new Leilao('Carro brabo');
-
-        $vinicius = new Usuario('Vinicius');
-
-        $yasmin = new Usuario('Yasmin');
-        
-        $leilao->recebeLance(new Lance($yasmin, 2500));
-        $leilao->recebeLance(new Lance($vinicius, 2000));
-
-        $leiloeiro = new Avaliador();
-
-        $leiloeiro->avalia($leilao);
-
-        $maiorValor = $leiloeiro->getMaiorValor();
-
-        $this->assertEquals(2500, $maiorValor);
-    }
-
-    public function testAvaliadorDeveEncontrarOMenorLanceEmOrdemDecrescente()
-    {
-        $leilao = new Leilao('Carro brabo');
-
-        $vinicius = new Usuario('Vinicius');
-
-        $yasmin = new Usuario('Yasmin');
-        
-        $leilao->recebeLance(new Lance($yasmin, 2500));
-        $leilao->recebeLance(new Lance($vinicius, 2000));
-
         $leiloeiro = new Avaliador();
 
         $leiloeiro->avalia($leilao);
 
         $menorValor = $leiloeiro->getMenorValor();
 
-        $this->assertEquals(2000, $menorValor);
+        $this->assertEquals(1700, $menorValor);
     }
 
-    public function testAvaliadorDeveEncontrarOMenorLanceEmOrdemCrescente()
+    /**
+     * @dataProvider entregaLeiloes
+     */
+    public function testAvaliadorDeveBuscarOsTresMaioresValores(Leilao $leilao)
+    {
+        $leiloeiro = new Avaliador();
+        $leiloeiro->avalia($leilao);
+
+        $maioresLances = $leiloeiro->getMaioresLances();
+
+        $this->assertCount(3, $maioresLances);
+        $this->assertEquals(2500, $maioresLances[0]->getValor());
+        $this->assertEquals(2000, $maioresLances[1]->getValor());
+        $this->assertEquals(1700, $maioresLances[2]->getValor());
+    }
+
+    public function leilaoEmOrdemCrescente(): Leilao
     {
         $leilao = new Leilao('Carro brabo');
 
         $vinicius = new Usuario('Vinicius');
-
         $yasmin = new Usuario('Yasmin');
+        $kimie = new Usuario('Kimie');
 
+        $leilao->recebeLance(new Lance($kimie, 1700));
         $leilao->recebeLance(new Lance($vinicius, 2000));
         $leilao->recebeLance(new Lance($yasmin, 2500));
 
-        $leiloeiro = new Avaliador();
+        return $leilao;
+    }
 
-        $leiloeiro->avalia($leilao);
+    public function leilaoEmOrdemDecrescente(): Leilao
+    {
+        $leilao = new Leilao('Carro brabo');
 
-        $menorValor = $leiloeiro->getmenorValor();
+        $vinicius = new Usuario('Vinicius');
+        $yasmin = new Usuario('Yasmin');
+        $kimie = new Usuario('Kimie');
 
-        $this->assertEquals(2000, $menorValor);
+        $leilao->recebeLance(new Lance($yasmin, 2500));
+        $leilao->recebeLance(new Lance($vinicius, 2000));
+        $leilao->recebeLance(new Lance($kimie, 1700));
+
+        return $leilao;
+    }
+
+    public function entregaLeiloes(): array
+    {
+        return [
+            array($this->leilaoEmOrdemCrescente(), $this->leilaoEmOrdemDecrescente())
+        ];
     }
 }

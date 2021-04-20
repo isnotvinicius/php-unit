@@ -156,7 +156,7 @@ OK (1 test, 1 assertion)
 
 - No nosso caso haviamos nomeado nosso método como ```testUm()``` e isso não é nada descritivo, um nome melhor seria ```testAvaliadorDeveEncontrarOMaiorLanceEmOrdemCrescente()```.
 
-- Mas e se nós criarmos um outro método e trocarmos a ordem dos lances fazendo com que o maior lance venha antes do primeiro, nosso teste irá passar? A resposta é não. Para isso precisaremos alterar a classe ```Avaliador.php```. No método ```avalia()``` iremos adicionar um foreach para cada lance e verificar se o lance é maior que o atributo ```$maiorValor``` inicializado com 0. Sua classe deve ficar assim:
+- Mas e se nós criarmos um outro método e trocarmos a ordem dos lances fazendo com que o maior lance seja o primeiro, nosso teste irá passar? A resposta é não. Para isso precisaremos alterar a classe ```Avaliador.php```. No método ```avalia()``` iremos adicionar um foreach para cada lance e verificar se o lance é maior que o atributo ```$maiorValor``` inicializado com 0. Sua classe deve ficar assim:
 
 ```
 class Avaliador
@@ -207,6 +207,35 @@ public function avalia(Leilao $leilao): void
 - Claro que este não é o código mais limpo do mundo, este é apenas um exemplo para que você possa notar a importância dos testes automatizados e como eles nos ajudam a verificar os bugs que nosso código possuí, sem eles talvez demorariamos muito mais tempo para encontrar um erro e refatorar nosso código, mas como o teste nos mostra o que falhou e onde falhou podemos corrigir rapidamente as falhas.
 
 
+### Testando listas
+
+- Vamos ter como exemplo um teste que busca os 3 maiores lances do nosso leilão independente da ordem. Primeiro precisamos implementar a nossa lógica, para isso iremos adicionar o atributo ```private $maioresLances;``` na nossa classe ```Avaliador.php``` e dentro da função ```avalia()``` adicione a seguinte lógica:
+
+```
+$lances = $leilao->getLances();
+
+usort($lances, function(Lance $lance1, Lance $lance2) {
+    return $lance2->getValor() - $lance1->getValor();
+});
+
+$this->maioresLances = array_slice($lances, 0, 3);
+```
+
+- Com isso iremos garantir que sempre serão retornados os maiores valores do leilão. Não esqueça de implementar a função get do atributo ```$maioresLances```.
+
+- Agora precisamos realizar o teste disso. Primeiramente iremos criar o método do teste e em seguida implementar o leilão com quantos lances você preferir. Depois de criar o leilão, os usuários e realizar os lances, nós iremos pegar os maiores lances e testar a nossa lista:
+
+```
+$maioresLances = $leiloeiro->getMaioresLances();
+
+$this->assertCount(3, $maioresLances);
+$this->assertEquals(2000, $maioresLances[0]->getValor());
+$this->assertEquals(1700, $maioresLances[1]->getValor());
+$this->assertEquals(1500, $maioresLances[2]->getValor());
+```
+
+- Observe que utilizamos o método ```assertCount()```. Este método recebe como parâmetro um valor inteiro X + um array e verifica se o número de indíces do array passado bate com o número inteiro passado. Para verificar todos os métodos de teste acesse a [documentação](https://phpunit.readthedocs.io/en/9.5/assertions.html).
+
 ## Parte 3: Classes de equivalência
 
 - Agora que aprendemos como podemos criar testes automatizados com o PHPUnit, surge uma dúvida muito importante: Como saber quando nossa aplicação é confiável e quando temos testes o suficiente? Se analisarmos bem nosso código, baseado nos padrões passados anteriormente e olharmos o que vem antes do ```assert/then```, notaremos que temos algumas diferenças na montagem do cenário de testes mas que não há diferença nos dados que passamos, ou seja, tanto faz se passarmos 20.000 ou 2.000, o resultado será o mesmo. Mas se fossemos criar um teste para cada valor diferente teriamos testes infinitos, e é aí que entram as classes de equivalência.
@@ -230,3 +259,77 @@ public function avalia(Leilao $leilao): void
    3º - Nas idades maiores que 120 iremos testar se a idade é igual à 121  que é o valor mais próximo do limite da classe.
 
 - Estas são formas de reduzirmos o número de testes da nossa aplicação sem perdermos a confiabilidade, garantindo que todos os casos estão sendo testados corretamente. Sempre teste apenas o necessário e evite criar o mesmo teste para um valor diferente. Caso queria estudar mais sobre classes de equivalência e limites de fronteira recomendo que leia este [artigo](http://testwarequality.blogspot.com/p/tenicas-de-teste.html). 
+
+
+## Parte 4: Organizando nossos testes
+
+- Como foi dito anteriormente, o nosso código não é exatamente o mais limpo do mundo. Se observarmos bem nosso código de testes veremos que todos tem uma coisa que se repete: A criação de um leilão. Então nosso primeiro passo é isolar a criação de um leilão para um único lugar e reaproveitar isso nos nossos métodos de testes.
+
+
+### <b>Data Providers</b>
+
+- Para resolvermos o problema descrito acima, poderiamos separar essas criações de leilão em uma função e toda vez que iniciarmos um teste chamarmos essas funções. Mas o PHPUnit nos oferece uma ferramenta chamada Data Provider que resolve este nosso problema.
+
+- O Data Provider é uma maneira de entregarmos dados para os nossos testes afim de não repetirmos código e fazermos com que nossos testes sejam executados várias vezes mas com dados diferentes.
+
+- Então utilizando o Data Provider teríamos uma abordagem diferente para os testes. Vamos tomar como exemplo nosso primeiro teste ```testAvaliadorDeveEncontrarOMaiorLanceEmOrdemCrescente()```. Com o Data Provider nós removeriamos a parte da Ordem Crescente pois tanto faz a ordem dos lances já que o método irá receber o leilão pronto.
+
+- Mas como utilizar o Data Provider? O primeiro passo é refatorarmos a criação do leilão para um método específico.
+
+```
+public function leilaoEmOrdemCrescente(): Leilao
+{
+    $leilao = new Leilao('Carro brabo');
+
+    $vinicius = new Usuario('Vinicius');
+    $yasmin = new Usuario('Yasmin');
+    $kimie = new Usuario('Kimie');
+
+    $leilao->recebeLance(new Lance($kimie, 1700));
+    $leilao->recebeLance(new Lance($vinicius, 2000));
+    $leilao->recebeLance(new Lance($yasmin, 2500));
+
+    return $leilao;
+}
+
+public function leilaoEmOrdemDecrescente(): Leilao
+{
+    $leilao = new Leilao('Carro brabo');
+
+    $vinicius = new Usuario('Vinicius');
+    $yasmin = new Usuario('Yasmin');
+    $kimie = new Usuario('Kimie');
+
+    $leilao->recebeLance(new Lance($yasmin, 2500));
+    $leilao->recebeLance(new Lance($vinicius, 2000));
+    $leilao->recebeLance(new Lance($kimie, 1700));
+
+    return $leilao;
+}
+```
+
+- Agora que refatoramos, como podemos fazer com que o método de teste reconheça que ele irá receber um leilão várias vezes? Através de uma annotation ```@dataProvider```, com ela informamos que este método receberá os dados para que ele possa testar.
+
+- Adicione a annotation no primeiro método:
+
+```
+/**
+* @dataProvider entregaLeiloes()
+*/
+public function testAvaliadorDeveEncontrarOMaiorLance(Leilao $leilao){...}
+```
+
+- E agora vamos implementar a função ```entregaLeiloes()```:
+
+```
+public function entregaLeiloes()
+{
+    return [
+        array($this->leilaoEmOrdemCrescente(), $this->leilaoEmOrdemDecrescente())
+    ];
+}
+```
+
+- Note que temos arrays dentro de um array, isso porque quando o teste receber os dados ele irá colocá-los como parâmetro um seguido do outro. Como temos 2 leilões e apenas um parâmetro, seria retornado um aviso ao executar nossos testes.
+
+- Faça o mesmo para todos os outros métodos de teste e adicione o Data Provider. Note que, agora, a única coisa que se repete entre os métodos é a annotation de Data Provider, nosso código está muito mais limpo e mais legível também.
