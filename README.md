@@ -333,3 +333,24 @@ public function entregaLeiloes()
 - Note que temos arrays dentro de um array, isso porque quando o teste receber os dados ele irá colocá-los como parâmetro um seguido do outro. Como temos 2 leilões e apenas um parâmetro, seria retornado um aviso ao executar nossos testes.
 
 - Faça o mesmo para todos os outros métodos de teste e adicione o Data Provider. Note que, agora, a única coisa que se repete entre os métodos é a annotation de Data Provider, nosso código está muito mais limpo e mais legível também.
+
+- Agora que utilizamos o Data Provider para melhorarmos nosso código, surge um questionamento: Ainda temos código repetido, poderiamos extraí-lo para um data provider também? Até poderiamos, mas iríamos implementar um método somente para instanciar um objeto do tipo ```Avaliador```. Existe uma maneira mais simples de se fazer isso.
+
+### <b>Método setUp</b>
+
+- O método setUp é um meio do PHPUnit saber que sempre antes de executar um método de teste ele deve executar antes o que está dentro do método setUp, e é lá que iremos adicionar a regra de criar um leiloeiro. 
+
+```
+private $leiloeiro;
+
+protected function setUp(): void
+{
+    $this->leiloeiro = new Avaliador();
+}
+```
+
+- Implementando o método setUp podemos remover dos nossos métodos de teste a linha que instânciava um avaliador e substituir ```$leiloeiro->metodo()``` por ```$this->leiloeiro->metodo()```.
+
+- Uma importante observação é que o Data Provider é executado <b>antes</b> do código de setUp, e o setUp é executado toda vez antes de um teste, por isso não é possível colocar a criação dos usuários dentro do setUp.
+
+- Para executarmos código antes ou depois de testes, o PHPUnit nos fornece as ```fixtures```, que nada mais são métodos que serão executados em momentos específicos. Todos os métodos fixtures estão listados na [documentação](https://phpunit.readthedocs.io/en/8.1/fixtures.html) do PHPUnit.
