@@ -351,6 +351,93 @@ protected function setUp(): void
 
 - Implementando o método setUp podemos remover dos nossos métodos de teste a linha que instânciava um avaliador e substituir ```$leiloeiro->metodo()``` por ```$this->leiloeiro->metodo()```.
 
-- Uma importante observação é que o Data Provider é executado <b>antes</b> do código de setUp, e o setUp é executado toda vez antes de um teste, por isso não é possível colocar a criação dos usuários dentro do setUp.
+- Uma importante observação é que todos os Data Provider são executados para cada teste existente e só depois, antes de executar cada teste, é executado o código dentro do método setUp.
 
 - Para executarmos código antes ou depois de testes, o PHPUnit nos fornece as ```fixtures```, que nada mais são métodos que serão executados em momentos específicos. Todos os métodos fixtures estão listados na [documentação](https://phpunit.readthedocs.io/en/8.1/fixtures.html) do PHPUnit.
+
+### <b>Configurações no XML</b>
+
+- O PHPUnit utiliza um arquivo XML para suas configurações. Lá podemos deixar por padrão a flag --colors, apontar o diretório padrão para os testes e muitas outras coisas. Para utilizá-lo basta criar um arquivo chamado ```phpunit.xml``` na raiz do seu projeto e adicionar lá as configurações desejadas.
+
+- Para adicionarmos as configurações desejadas primeiramente precisamos ter a tag ```<phpunit>``` com alguns parâmetros obrigatórios. Basta colar o código abaixo dentro do seu arquivo.
+
+```
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+</phpunit>
+```
+
+- Podemos adicionar um parâmetro dentro da tag ```<phpunit>``` para que sempre que executarmos o phpunit ele já executar com a flag --colors, basta adicionar ```colors="true"``` dentro da tag.
+
+- Podemos também informar as suites de testes, que é onde os testes ficam. Podemos adicionar nosso diretório já criado, mas poderíamos adicionar outros também caso tivéssemos. Para isso usamos as tags ```<testsuites>```, ```<testsuite>``` e ```<directory>```.
+
+```
+<testsuites>
+    <testsuite name="nome">
+        <directory>tests</directory>
+    </testsuite>
+</testsuites>
+```
+
+- Adicionando essas configurações, basta executar o phpunit sem passar parâmetro nenhum.
+
+- Uma função interessante é a de arquivos de log, que serve para verificarmos os testes que foram executados e algumas outras informações. Os nomes descritivos dos testes são importantes pois eles que são usados nesse arquivo de log.
+
+```
+<logging>
+    <testdoxText outputFile="arquivo-log.txt"/>
+</logging>
+
+Arquivo de Log Gerado:
+ [x] Avaliador deve encontrar o maior lance with data set #0
+ [x] Avaliador deve encontrar o menor lance with data set #0
+ [x] Avaliador deve buscar os tres maiores valores with data set #0
+```
+
+- Se preferir dar um nome mais descritivo para os ```data set``` basta trocar o retorno dos data providers para:
+
+```
+return [
+    'nome data set' => [$variavel]
+];
+```
+
+- Caso queira ver as outras opções de configurações que o PHPUnit oferece basta checar a [documentação](https://phpunit.readthedocs.io/en/9.5/configuration.html).
+
+
+## Parte 5: Desenvolvimento Guiado a Testes
+
+- Vamos supor que nossa aplicação receba uma nova regra onde cada usuário só possa dar um lance, caso haja mais de um lance para o mesmo usuário o segundo lance será ignorado. Vamos começar desenvolvendo nosso teste. Crie um diretório chamado ```Model``` na pasta de tests, crie um ```LeilaoTest.php``` e não esqueça de extender a classe de testes do PHPUnit. Dentro dele iremos implementar o teste.
+
+```
+public function testLeilaoNaoDeveReceberLancesRepetidos()
+{
+    $leilao = new Leilao('Carro');
+    $ana = new Usuario('Ana');
+
+    $leilao->recebeLance(new Lance($ana, 1000));
+    $leilao->recebeLance(new Lance($ana, 1500));
+
+    $this->assertCount(1, $leilao->getLances());
+    $this->assertEquals(1000, $leilao->getLances()[0]->getValor());
+}
+```
+
+- Se você rodar os testes verá que isso vai falhar. Este teste falhar é um bom sinal, pois ainda não implementamos essa funcionalidade e se ela falhou é porque algo realmente foi testado. Vamos então implementar a nossa funcionalidade. Na classe ```Leilao.php``` adicione o seguinte metodo.
+
+```
+private function perteceAoUltimoUsuario(Lance $lance): bool
+{
+    $ultimoLance = $this->lances[count($this->lances) - 1];
+    return $lance->getUsuario() == $ultimoLance;
+}
+```
+
+- E dentro do método ```recebeLance()``` iremos adicionar a seguinte verificação.
+
+```
+if(!empty($this->lances) && $this->perteceAoUltimoUsuario($lance)){
+    return;
+}
+```
+
+- É assim que o TDD funciona, primeiro criamos um teste e garantimos que ele esteja funcionando, no caso falhando, pois nossa funcionalidade ainda não foi implementada. Depois desenvolvemos a funcionalidade e garantimos que o teste agora passe. Depois de desenvolver a funcionalidade e garantir o funcionamento do teste nós refatoramos o código para deixá-lo o mais limpo possível, ainda garantindo que o teste funciona. Caso queira entender melhor como funciona o TDD você pode acessar este [artigo](https://tdd.caelum.com.br) da Caelum.

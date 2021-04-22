@@ -18,7 +18,8 @@ class AvaliadorTest extends TestCase
     }
 
     /**
-     * @dataProvider entregaLeiloes
+     * @dataProvider leilaoEmOrdemDecrescente
+     * @dataProvider leilaoEmOrdemCrescente
      */
     public function testAvaliadorDeveEncontrarOMaiorLance(Leilao $leilao)
     {
@@ -30,7 +31,8 @@ class AvaliadorTest extends TestCase
     }
 
     /**
-     * @dataProvider entregaLeiloes
+     * @dataProvider leilaoEmOrdemCrescente
+     * @dataProvider leilaoEmOrdemDecrescente
      */
     public function testAvaliadorDeveEncontrarOMenorLance(Leilao $leilao)
     {
@@ -42,7 +44,8 @@ class AvaliadorTest extends TestCase
     }
 
     /**
-     * @dataProvider entregaLeiloes
+     * @dataProvider leilaoEmOrdemCrescente
+     * @dataProvider leilaoEmOrdemDecrescente
      */
     public function testAvaliadorDeveBuscarOsTresMaioresValores(Leilao $leilao)
     {
@@ -56,7 +59,7 @@ class AvaliadorTest extends TestCase
         $this->assertEquals(1700, $maioresLances[2]->getValor());
     }
 
-    public function leilaoEmOrdemCrescente(): Leilao
+    public function leilaoEmOrdemCrescente(): array
     {
         $leilao = new Leilao('Carro brabo');
 
@@ -68,28 +71,25 @@ class AvaliadorTest extends TestCase
         $leilao->recebeLance(new Lance($vinicius, 2000));
         $leilao->recebeLance(new Lance($yasmin, 2500));
 
-        return $leilao;
-    }
-
-    public function leilaoEmOrdemDecrescente(): Leilao
-    {
-        $leilao = new Leilao('Carro brabo');
-
-        $vinicius = new Usuario('Vinicius');
-        $yasmin = new Usuario('Yasmin');
-        $kimie = new Usuario('Kimie');
-
-        $leilao->recebeLance(new Lance($yasmin, 2500));
-        $leilao->recebeLance(new Lance($vinicius, 2000));
-        $leilao->recebeLance(new Lance($kimie, 1700));
-
-        return $leilao;
-    }
-
-    public function entregaLeiloes(): array
-    {
         return [
-            array($this->leilaoEmOrdemCrescente(), $this->leilaoEmOrdemDecrescente())
+            'ordem crescente' => [$leilao]
+        ];
+    }
+
+    public function leilaoEmOrdemDecrescente(): array
+    {
+        $leilao = new Leilao('Carro brabo');
+
+        $vinicius = new Usuario('Vinicius');
+        $yasmin = new Usuario('Yasmin');
+        $kimie = new Usuario('Kimie');
+
+        $leilao->recebeLance(new Lance($yasmin, 2500));
+        $leilao->recebeLance(new Lance($vinicius, 2000));
+        $leilao->recebeLance(new Lance($kimie, 1700));
+
+        return [
+            'ordem decrescente' => [$leilao]
         ];
     }
 }
