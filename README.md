@@ -9,7 +9,7 @@
 - Parte 3: Classes de equivalência
 - Parte 4: Organizando nossos testes
 - Parte 5: Desenvolvimento Guiado a Testes
-- [Parte 6: Testando Excessões](#parte-6-testando-excessoes)
+- [Parte 6: Testando Excessões](#testando-excessoes)
 
 ## Parte 1: O que é e para que serve o TDD?
 
@@ -452,7 +452,7 @@ if(!empty($this->lances) && $this->perteceAoUltimoUsuario($lance)){
 - É assim que o TDD funciona, primeiro criamos um teste e garantimos que ele esteja funcionando, no caso falhando, pois nossa funcionalidade ainda não foi implementada. Depois desenvolvemos a funcionalidade e garantimos que o teste agora passe. Depois de desenvolver a funcionalidade e garantir o funcionamento do teste nós refatoramos o código para deixá-lo o mais limpo possível, ainda garantindo que o teste funciona. Caso queira entender melhor como funciona o TDD você pode acessar este [artigo](https://tdd.caelum.com.br) da Caelum.
 
 
-## Parte 6: Testando Excessões
+## <a name="testando-excessoes"></a>Parte 6: Testando Excessões
 
 - Uma parte importante dos testes é avaliar as excessões que podem ocorrer, para caso haja algum erro no nosso código nós estarmos cientes que as excessões também funcionam.
 
