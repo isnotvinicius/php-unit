@@ -4,14 +4,14 @@
 
 ## Índice
 
-- [Parte 1: O que é e para que serve o TDD?](#o-que-e-e-para-que-serve-o-tdd-?)
-- Parte 2: Instalação e utilização do PHPUnit
-- Parte 3: Classes de equivalência
-- Parte 4: Organizando nossos testes
-- Parte 5: Desenvolvimento Guiado a Testes
+- [Parte 1: O que é e para que serve o TDD?](#o-que-e)
+- [Parte 2: Instalação e utilização do PHPUnit](#instalacao)
+- [Parte 3: Classes de equivalência](#classes-equivalencia)
+- [Parte 4: Organizando nossos testes](#organizando-testes)
+- [Parte 5: Desenvolvimento Guiado a Testes]($tdd)
 - [Parte 6: Testando Excessões](#testando-excessoes)
 
-## Parte 1: O que é e para que serve o TDD?
+## <a name="o-que-e"></a>Parte 1: O que é e para que serve o TDD?
 
 - TDD, ou Desenvolvimento Orientado por Testes, é como o próprio nome já diz, desenvolver um software baseado em testes escritos do nosso código de produção. Basicamente o TDD se baseia em pequenos ciclos de repetições , onde para cada funcionalidade do sistema um teste é criado antes, é claro que inicialmente o teste falhará pois a funcionalidade ainda não existe, mas depois do teste implementamos a funcionalidade para que o teste passe. 
 
@@ -79,7 +79,7 @@ if($valorEsperado == $maiorValor){
 
 - Note que nosso teste criado ainda não está automatizado pois ele não informa se o teste foi bem sucedido ou não, para isso podemos adicionar um if verificando se o valor esperado é igual a 2500, mas isso ainda é muito pouco e dá para ser melhorado. Como podemos melhorar e automatizar o nosso teste?
 
-## Parte 2: Instalação e utilização do PHPUnit
+## <a name="instalacao"></a>Parte 2: Instalação e utilização do PHPUnit
 
 - O PHPUnit é um framework de testes orientado a códigos do PHP, é a ferramenta de testes mais famosa do PHP mas existem outras como o PEST, por exemplo.
 
@@ -245,7 +245,7 @@ $this->assertEquals(1500, $maioresLances[2]->getValor());
 
 - Observe que utilizamos o método ```assertCount()```. Este método recebe como parâmetro um valor inteiro X + um array e verifica se o número de indíces do array passado bate com o número inteiro passado. Para verificar todos os métodos de teste acesse a [documentação](https://phpunit.readthedocs.io/en/9.5/assertions.html).
 
-## Parte 3: Classes de equivalência
+## <a name="classes-equivalencia"></a>Parte 3: Classes de equivalência
 
 - Agora que aprendemos como podemos criar testes automatizados com o PHPUnit, surge uma dúvida muito importante: Como saber quando nossa aplicação é confiável e quando temos testes o suficiente? Se analisarmos bem nosso código, baseado nos padrões passados anteriormente e olharmos o que vem antes do ```assert/then```, notaremos que temos algumas diferenças na montagem do cenário de testes mas que não há diferença nos dados que passamos, ou seja, tanto faz se passarmos 20.000 ou 2.000, o resultado será o mesmo. Mas se fossemos criar um teste para cada valor diferente teriamos testes infinitos, e é aí que entram as classes de equivalência.
 
@@ -270,7 +270,7 @@ $this->assertEquals(1500, $maioresLances[2]->getValor());
 - Estas são formas de reduzirmos o número de testes da nossa aplicação sem perdermos a confiabilidade, garantindo que todos os casos estão sendo testados corretamente. Sempre teste apenas o necessário e evite criar o mesmo teste para um valor diferente. Caso queria estudar mais sobre classes de equivalência e limites de fronteira recomendo que leia este [artigo](http://testwarequality.blogspot.com/p/tenicas-de-teste.html). 
 
 
-## Parte 4: Organizando nossos testes
+## <a name="organizando-testes"></a>Parte 4: Organizando nossos testes
 
 - Como foi dito anteriormente, o nosso código não é exatamente o mais limpo do mundo. Se observarmos bem nosso código de testes veremos que todos tem uma coisa que se repete: A criação de um leilão. Então nosso primeiro passo é isolar a criação de um leilão para um único lugar e reaproveitar isso nos nossos métodos de testes.
 
@@ -413,7 +413,7 @@ return [
 - Caso queira ver as outras opções de configurações que o PHPUnit oferece basta checar a [documentação](https://phpunit.readthedocs.io/en/9.5/configuration.html).
 
 
-## Parte 5: Desenvolvimento Guiado a Testes
+## <a name="tdd"></a>Parte 5: Desenvolvimento Guiado a Testes
 
 - Vamos supor que nossa aplicação receba uma nova regra onde cada usuário só possa dar um lance, caso haja mais de um lance para o mesmo usuário o segundo lance será ignorado. Vamos começar desenvolvendo nosso teste. Crie um diretório chamado ```Model``` na pasta de tests, crie um ```LeilaoTest.php``` e não esqueça de extender a classe de testes do PHPUnit. Dentro dele iremos implementar o teste.
 
