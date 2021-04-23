@@ -8,7 +8,7 @@
 - [Parte 2: Instalação e utilização do PHPUnit](#instalacao)
 - [Parte 3: Classes de equivalência](#classes-equivalencia)
 - [Parte 4: Organizando nossos testes](#organizando-testes)
-- [Parte 5: Desenvolvimento Guiado a Testes]($tdd)
+- [Parte 5: Desenvolvimento Guiado a Testes](#tdd)
 - [Parte 6: Testando Excessões](#testando-excessoes)
 
 ## <a name="o-que-e"></a>Parte 1: O que é e para que serve o TDD?
