@@ -13,7 +13,7 @@
 
 ## <a name="o-que-e"></a>Parte 1: O que é e para que serve o TDD?
 
-- TDD, ou Desenvolvimento Orientado por Testes, é como o próprio nome já diz, desenvolver um software baseado em testes escritos do nosso código de produção. Basicamente o TDD se baseia em pequenos ciclos de repetições , onde para cada funcionalidade do sistema um teste é criado antes, é claro que inicialmente o teste falhará pois a funcionalidade ainda não existe, mas depois do teste implementamos a funcionalidade para que o teste passe. 
+- TDD, ou Desenvolvimento Orientado por Testes, é como o próprio nome já diz, desenvolver um software baseado em testes escritos do nosso código de produção. Basicamente o TDD se baseia em pequenos ciclos de repetições, onde para cada funcionalidade do sistema um teste é criado antes, é claro que inicialmente o teste falhará pois a funcionalidade ainda não existe, mas depois do teste implementamos a funcionalidade para que o teste passe. 
 
 - Mas quais as vantagens de se usar o TDD? Uma grande vantagem desse tipo de desenvolvimento é a segurança, tanto no refactoring como na correção de bugs, já que podemos ver o que estamos ou não afetando. Outra vantagem é que consequentemente o nosso código estará menos acoplado, levando em conta que temos que separá-lo em pequenos "pedaços" para que sejam testáveis, entre outras muitas vantagens. Existem diversos artigos pela internet que explicam de maneira mais detalhada do TDD e sua importância, vale a pena buscá-los.
 
