@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Alura\Leilao\Tests\Model;
-
 
 use Alura\Leilao\Model\Lance;
 use Alura\Leilao\Model\Leilao;
@@ -11,9 +9,22 @@ use PHPUnit\Framework\TestCase;
 
 class LeilaoTest extends TestCase
 {
+    public function testLeilaoNaoDeveReceberLancesRepetidos()
+    {
+        $leilao = new Leilao('Variante');
+        $ana = new Usuario('Ana');
+
+        $leilao->recebeLance(new Lance($ana, 1000));
+
+        $this->assertCount(1, $leilao->getLances());
+        $this->assertEquals(1000, $leilao->getLances()[0]->getValor());
+    }
 
     public function testLeilaoNaoDeveAceitarMaisDe5LancesPorUsuario()
     {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Usuário não pode propor mais de 5 lances por leilão');
+
         $leilao = new Leilao('Brasília Amarela');
         $joao = new Usuario('João');
         $maria = new Usuario('Maria');
@@ -34,20 +45,6 @@ class LeilaoTest extends TestCase
         $leilao->recebeLance(new Lance($maria, 5500));
 
         $leilao->recebeLance(new Lance($joao, 6000));
-
-        $this->assertCount(10, $leilao->getLances());
-        $this->assertEquals(5500, $leilao->getLances()[array_key_last($leilao->getLances())]->getValor());
-    }
-
-    public function testLeilaoNaoDeveReceberLancesRepetidos()
-    {
-        $leilao = new Leilao('Variante');
-        $ana = new Usuario('Ana');
-
-        $leilao->recebeLance(new Lance($ana, 1000));
-
-        $this->assertCount(1, $leilao->getLances());
-        $this->assertEquals(1000, $leilao->getLances()[0]->getValor());
     }
 
     /**
@@ -61,7 +58,7 @@ class LeilaoTest extends TestCase
             $this->assertEquals($valorEsperado, $leilao->getLances()[$i]->getValor());
         }
     }
-
+    
     public function geraLances()
     {
         $joao = new Usuario('João');

@@ -1,6 +1,15 @@
 # Testes unitários com PHP Unit
 
-- Este é um projeto simples para explicar o conceito do desenvolvimento baseado em testes, nele iremos abordar o que são e para quê servem os testes, como automatizar um teste e como utilizar o PHPUnit.
+- Este é um projeto simples para explicar o conceito do desenvolvimento baseado em testes, nele iremos abordar o que são e para quê servem os testes, como automatizar um teste e como utilizar o PHPUnit. O projeto foi dividido em 6 partes e é apenas uma introdução ao conceito de TDD.
+
+## Índice
+
+- [Parte 1: O que é e para que serve o TDD?](#o-que-e-e-para-que-serve-o-tdd-?)
+- Parte 2: Instalação e utilização do PHPUnit
+- Parte 3: Classes de equivalência
+- Parte 4: Organizando nossos testes
+- Parte 5: Desenvolvimento Guiado a Testes
+- [Parte 6: Testando Excessões](#parte-6-testando-excessoes)
 
 ## Parte 1: O que é e para que serve o TDD?
 
@@ -441,3 +450,39 @@ if(!empty($this->lances) && $this->perteceAoUltimoUsuario($lance)){
 ```
 
 - É assim que o TDD funciona, primeiro criamos um teste e garantimos que ele esteja funcionando, no caso falhando, pois nossa funcionalidade ainda não foi implementada. Depois desenvolvemos a funcionalidade e garantimos que o teste agora passe. Depois de desenvolver a funcionalidade e garantir o funcionamento do teste nós refatoramos o código para deixá-lo o mais limpo possível, ainda garantindo que o teste funciona. Caso queira entender melhor como funciona o TDD você pode acessar este [artigo](https://tdd.caelum.com.br) da Caelum.
+
+
+## Parte 6: Testando Excessões
+
+- Uma parte importante dos testes é avaliar as excessões que podem ocorrer, para caso haja algum erro no nosso código nós estarmos cientes que as excessões também funcionam.
+
+- Primeiro vamos implementar a excessão na nossa classe ```Avaliador.php```. Dentro do método ```avalia()``` adicione o seguinte código, que verifica se um leilão está vazio e, caso esteja, lança uma excessão com a mensagem de que o leilão não possuí lances.
+
+```
+if(empty($leilao->getLances())){
+    throw new \DomainException('Não é possível avaliar um leilão sem lances!!!');
+}
+```
+
+### <b>Método expectException</b>
+
+- O método expectException é, como o próprio nome ja diz, um método que recebe uma excessão e verifica se a excessão é do mesmo tipo definida no código. Como definimos uma DomainException no código acima vamos passar uma DomainException para esse método.
+
+- Agora implemente o teste na classe ```AvaliadorTest.php```.
+
+```
+public function testLeilaoVazioNaoPodeSerAvaliado()
+{
+    $this->expectException(\DomainException::class);
+    $leilao = new Leilao('Fusca');
+    $this->leiloeiro->avalia($leilao);
+}
+```
+
+- Usando esse método do PHPUnit ele verifica se a excessão passada está sendo lançada de fato. Você pode também usar o ```$this->expectExceptionMessage('mensagem');``` para verificar se a mensagem passada como parâmetro é a mesma recebida quando a excessão é lançada. 
+
+- Deste jeito que implementamos nós quebramos o padrão de Arrange-Act-Assert, o que não é um problema grave mas pode incomodar algumas pessoas. Se fossemos seguir o padrão teríamos que usar um try/catch dentro do teste. A escolha do que seguir fica a seu critério.
+
+- Os métodos de excessão do PHPUnit estão listados na [documentação](https://phpunit.readthedocs.io/en/9.5/writing-tests-for-phpunit.html#writing-tests-for-phpunit-exceptions-examples-exceptiontest-php).
+
+

@@ -10,6 +10,7 @@ use Alura\Leilao\Service\Avaliador;
 
 class AvaliadorTest extends TestCase
 {
+    /**@var Avaliador */
     private $leiloeiro;
 
     protected function setUp(): void
@@ -91,5 +92,24 @@ class AvaliadorTest extends TestCase
         return [
             'ordem decrescente' => [$leilao]
         ];
+    }
+
+    public function testLeilaoVazioNaoPodeSerAvaliado()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Não é possível avaliar um leilão sem lances!!!');
+        $leilao = new Leilao('Fusca');
+        $this->leiloeiro->avalia($leilao);
+    }
+
+    public function testLeilaoFinalizadoNaoPodeSerAvaliado()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Leilão já finalizado');
+
+        $leilao = new Leilao('Fusca');
+        $leilao->recebeLance(new Lance(new Usuario('João'), 2000));
+        $leilao->finaliza();
+        $this->leiloeiro->avalia($leilao);
     }
 }
